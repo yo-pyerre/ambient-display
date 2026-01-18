@@ -4,6 +4,7 @@ Raspberry Pi Art Display - Main Flask Application
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import os
+from config_loader import get_config
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
@@ -18,6 +19,23 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'service': 'raspberry-pi-art-display'
+    }), 200
+
+# Configuration endpoint
+@app.route('/api/config', methods=['GET'])
+def get_configuration():
+    """Get application configuration."""
+    config = get_config()
+    return jsonify(config.get()), 200
+
+@app.route('/api/config/reload', methods=['POST'])
+def reload_configuration():
+    """Reload configuration from file."""
+    config = get_config()
+    config.reload()
+    return jsonify({
+        'status': 'reloaded',
+        'config': config.get()
     }), 200
 
 # Serve frontend static files

@@ -1,0 +1,20 @@
+{
+  "image_duration": 30,
+  "device_ip": "192.168.1.100",
+  "paths": {
+    "images": "cover art",
+    "todos": "todos.txt"
+  },
+  "time_periods": {
+    "day_start": "06:00",
+    "night_start": "22:00"
+  },
+  "presence": {
+    "scan_interval": 60,
+    "scan_method": "ping"
+  },
+  "display": {
+    "transition_duration": 1000,
+    "poll_interval": 5000
+  }
+}

@@ -18,11 +18,11 @@
 
 ## Phase 3: Backend - Configuration Management
 
-- [ ] Create config.json structure (image_duration, device_ip, paths)
-- [ ] Implement configuration loader module
-- [ ] Add endpoint to read configuration (GET /api/config)
-- [ ] Test configuration can be read and modified
-- [ ] Add default configuration values
+- [x] Create config.json structure (image_duration, device_ip, paths)
+- [x] Implement configuration loader module
+- [x] Add endpoint to read configuration (GET /api/config)
+- [x] Test configuration can be read and modified
+- [x] Add default configuration values
 
 ## Phase 4: Backend - Image File Handling
 
