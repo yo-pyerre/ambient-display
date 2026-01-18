@@ -10,11 +10,11 @@
 
 ## Phase 2: Backend - Basic Server
 
-- [ ] Create main Flask/FastAPI application file
-- [ ] Implement basic server with health check endpoint (GET /health)
-- [ ] Add static file serving for frontend assets
-- [ ] Test server starts and health endpoint responds
-- [ ] Add CORS configuration for local development
+- [x] Create main Flask/FastAPI application file
+- [x] Implement basic server with health check endpoint (GET /health)
+- [x] Add static file serving for frontend assets
+- [x] Test server starts and health endpoint responds
+- [x] Add CORS configuration for local development
 
 ## Phase 3: Backend - Configuration Management
 
