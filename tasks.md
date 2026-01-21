@@ -42,11 +42,11 @@
 
 ## Phase 6: Backend - Time-of-Day Service
 
-- [ ] Create time period detector (day/night)
-- [ ] Define configurable time thresholds in config
-- [ ] Implement endpoint to get current time period (GET /api/time-period)
-- [ ] Test time period detection with various times
-- [ ] Add timezone support
+- [x] Create time period detector (day/night)
+- [x] Define configurable time thresholds in config
+- [x] Implement endpoint to get current time period (GET /api/time-period)
+- [x] Test time period detection with various times
+- [x] Add timezone support
 
 ## Phase 7: Backend - Network Presence Detection
 

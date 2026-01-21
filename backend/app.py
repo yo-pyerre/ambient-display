@@ -7,6 +7,7 @@ import os
 from config_loader import get_config
 from image_handler import ImageHandler
 from todo_handler import TodoHandler
+from time_service import TimeService
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
@@ -114,6 +115,29 @@ def get_todos():
             'message': str(e),
             'items': [],
             'count': 0
+        }), 500
+
+# Time period endpoints
+@app.route('/api/time-period', methods=['GET'])
+def get_time_period():
+    """Get current time period (day/night)."""
+    config = get_config()
+    day_start = config.get('time_periods.day_start')
+    night_start = config.get('time_periods.night_start')
+
+    try:
+        service = TimeService(day_start, night_start)
+        period_info = service.get_period_info()
+        return jsonify(period_info), 200
+    except ValueError as e:
+        return jsonify({
+            'error': 'Invalid time configuration',
+            'message': str(e)
+        }), 500
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to determine time period',
+            'message': str(e)
         }), 500
 
 # Serve frontend static files
