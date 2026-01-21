@@ -1,0 +1,19 @@
+[Unit]
+Description=Raspberry Pi Art Display Backend
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/art-display
+ExecStart=/home/pi/art-display/.venv/bin/python backend/app.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# Environment
+Environment="PYTHONUNBUFFERED=1"
+
+[Install]
+WantedBy=multi-user.target

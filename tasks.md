@@ -113,12 +113,12 @@
 
 ## Phase 14: System Deployment
 
-- [ ] Create systemd service file for backend
-- [ ] Test backend starts on boot
-- [ ] Create startup script for Chromium kiosk mode
-- [ ] Test frontend launches in kiosk mode on boot
-- [ ] Configure WiFi auto-reconnect
-- [ ] Test full system restart
+- [x] Create systemd service file for backend
+- [x] Test backend starts on boot
+- [x] Create startup script for Chromium kiosk mode
+- [x] Test frontend launches in kiosk mode on boot
+- [x] Configure WiFi auto-reconnect
+- [x] Test full system restart
 
 ## Phase 15: Documentation & Polish
 

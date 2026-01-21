@@ -1,0 +1,10 @@
+# Raspberry Pi Art Display - Autostart Configuration
+# Place this file at: ~/.config/lxsession/LXDE-pi/autostart
+# or: /etc/xdg/lxsession/LXDE-pi/autostart
+
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splash
+
+# Start Art Display in kiosk mode
+@/home/pi/art-display/deployment/start-kiosk.sh
