@@ -60,6 +60,9 @@ async function init() {
     const { initTodos } = await import('./todos.js');
     initTodos();
 
+    const { initStateManager } = await import('./stateManager.js');
+    initStateManager();
+
     console.log('Application initialized successfully');
 }
 

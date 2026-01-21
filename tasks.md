@@ -87,12 +87,12 @@
 
 ## Phase 11: Frontend - State Management
 
-- [ ] Create state manager module
-- [ ] Implement polling function for presence status
-- [ ] Add logic to switch between active/away states
-- [ ] Test state transitions work correctly
-- [ ] Add configurable poll interval
-- [ ] Implement screen blanking for away state
+- [x] Create state manager module
+- [x] Implement polling function for presence status
+- [x] Add logic to switch between active/away states
+- [x] Test state transitions work correctly
+- [x] Add configurable poll interval
+- [x] Implement screen blanking for away state
 
 ## Phase 12: Frontend - Time-Based Behavior
 
