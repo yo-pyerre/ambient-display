@@ -1,10 +1,11 @@
 """
 Raspberry Pi Art Display - Main Flask Application
 """
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, send_file
 from flask_cors import CORS
 import os
 from config_loader import get_config
+from image_handler import ImageHandler
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
@@ -37,6 +38,56 @@ def reload_configuration():
         'status': 'reloaded',
         'config': config.get()
     }), 200
+
+# Image endpoints
+@app.route('/api/images', methods=['GET'])
+def list_images():
+    """Get list of available images."""
+    config = get_config()
+    images_path = config.get('paths.images')
+
+    try:
+        handler = ImageHandler(images_path)
+        images = handler.scan_images()
+        return jsonify({
+            'count': len(images),
+            'images': images
+        }), 200
+    except FileNotFoundError as e:
+        return jsonify({
+            'error': 'Images directory not found',
+            'message': str(e),
+            'count': 0,
+            'images': []
+        }), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to scan images',
+            'message': str(e),
+            'count': 0,
+            'images': []
+        }), 500
+
+@app.route('/api/images/<path:filename>', methods=['GET'])
+def serve_image(filename):
+    """Serve an individual image file."""
+    config = get_config()
+    images_path = config.get('paths.images')
+
+    try:
+        handler = ImageHandler(images_path)
+        image_path = handler.get_image_path(filename)
+        return send_file(image_path, mimetype='image/jpeg')
+    except FileNotFoundError:
+        return jsonify({
+            'error': 'Image not found',
+            'filename': filename
+        }), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to serve image',
+            'message': str(e)
+        }), 500
 
 # Serve frontend static files
 @app.route('/', defaults={'path': ''})

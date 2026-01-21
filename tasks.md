@@ -26,11 +26,11 @@
 
 ## Phase 4: Backend - Image File Handling
 
-- [ ] Create function to scan /cover art directory for images
-- [ ] Filter valid image files (JPG, PNG)
-- [ ] Implement endpoint to list available images (GET /api/images)
-- [ ] Test endpoint returns correct image paths
-- [ ] Add error handling for missing directory
+- [x] Create function to scan /cover art directory for images
+- [x] Filter valid image files (JPG, PNG)
+- [x] Implement endpoint to list available images (GET /api/images)
+- [x] Test endpoint returns correct image paths
+- [x] Add error handling for missing directory
 
 ## Phase 5: Backend - TODO File Handling
 
