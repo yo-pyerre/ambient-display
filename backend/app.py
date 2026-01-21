@@ -6,6 +6,7 @@ from flask_cors import CORS
 import os
 from config_loader import get_config
 from image_handler import ImageHandler
+from todo_handler import TodoHandler
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
@@ -87,6 +88,32 @@ def serve_image(filename):
         return jsonify({
             'error': 'Failed to serve image',
             'message': str(e)
+        }), 500
+
+# TODO endpoints
+@app.route('/api/todos', methods=['GET'])
+def get_todos():
+    """Get TODO list."""
+    config = get_config()
+    todo_path = config.get('paths.todos')
+
+    try:
+        handler = TodoHandler(todo_path)
+        todos = handler.read_todos()
+        return jsonify(todos), 200
+    except FileNotFoundError as e:
+        return jsonify({
+            'error': 'TODO file not found',
+            'message': str(e),
+            'items': [],
+            'count': 0
+        }), 404
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to read TODO file',
+            'message': str(e),
+            'items': [],
+            'count': 0
         }), 500
 
 # Serve frontend static files

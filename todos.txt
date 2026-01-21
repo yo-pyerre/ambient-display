@@ -1,0 +1,5 @@
+Complete the Raspberry Pi Art Display project
+Test presence detection functionality
+Add more artwork to the collection
+Configure WiFi auto-reconnect
+Set up systemd service for auto-start

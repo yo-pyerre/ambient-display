@@ -34,11 +34,11 @@
 
 ## Phase 5: Backend - TODO File Handling
 
-- [ ] Create function to read TODO text file
-- [ ] Implement endpoint to get TODO list (GET /api/todos)
-- [ ] Test endpoint returns TODO content
-- [ ] Add error handling for missing TODO file
-- [ ] Add file watching to detect TODO changes
+- [x] Create function to read TODO text file
+- [x] Implement endpoint to get TODO list (GET /api/todos)
+- [x] Test endpoint returns TODO content
+- [x] Add error handling for missing TODO file
+- [x] Add file watching to detect TODO changes
 
 ## Phase 6: Backend - Time-of-Day Service
 
