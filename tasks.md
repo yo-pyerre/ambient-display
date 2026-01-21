@@ -78,12 +78,12 @@
 
 ## Phase 10: Frontend - TODO Display
 
-- [ ] Create TODO overlay component in HTML
-- [ ] Style TODO list for distance legibility (large font, high contrast)
-- [ ] Implement function to fetch TODO data from API
-- [ ] Add toggle functionality to show/hide TODO overlay
-- [ ] Test TODO display renders correctly
-- [ ] Add automatic line wrapping for long TODO items
+- [x] Create TODO overlay component in HTML
+- [x] Style TODO list for distance legibility (large font, high contrast)
+- [x] Implement function to fetch TODO data from API
+- [x] Add toggle functionality to show/hide TODO overlay
+- [x] Test TODO display renders correctly
+- [x] Add automatic line wrapping for long TODO items
 
 ## Phase 11: Frontend - State Management
 

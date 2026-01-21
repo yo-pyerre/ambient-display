@@ -57,6 +57,9 @@ async function init() {
     const { initSlideshow } = await import('./slideshow.js');
     await initSlideshow();
 
+    const { initTodos } = await import('./todos.js');
+    initTodos();
+
     console.log('Application initialized successfully');
 }
 
