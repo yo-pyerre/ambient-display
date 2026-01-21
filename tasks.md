@@ -96,11 +96,11 @@
 
 ## Phase 12: Frontend - Time-Based Behavior
 
-- [ ] Implement polling for time period from API
-- [ ] Add day/night mode CSS variables
-- [ ] Create function to apply time-based styling
-- [ ] Test day/night transitions
-- [ ] Add smooth transitions between modes
+- [x] Implement polling for time period from API
+- [x] Add day/night mode CSS variables
+- [x] Create function to apply time-based styling
+- [x] Test day/night transitions
+- [x] Add smooth transitions between modes
 
 ## Phase 13: Integration Testing
 

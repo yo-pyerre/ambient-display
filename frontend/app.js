@@ -63,6 +63,9 @@ async function init() {
     const { initStateManager } = await import('./stateManager.js');
     initStateManager();
 
+    const { initTimeManager } = await import('./timeManager.js');
+    initTimeManager();
+
     console.log('Application initialized successfully');
 }
 
