@@ -53,6 +53,10 @@ async function init() {
     // Load configuration from API
     await loadConfig();
 
+    // Initialize modules
+    const { initSlideshow } = await import('./slideshow.js');
+    await initSlideshow();
+
     console.log('Application initialized successfully');
 }
 
