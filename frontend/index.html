@@ -4,9 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raspberry Pi Art Display</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Raspberry Pi Art Display</h1>
-    <p>Frontend placeholder - to be implemented</p>
+    <!-- Main image display container -->
+    <div id="app" class="app">
+        <div id="imageContainer" class="image-container">
+            <img id="currentImage" class="art-image" alt="Artwork">
+        </div>
+
+        <!-- TODO overlay -->
+        <div id="todoOverlay" class="todo-overlay hidden">
+            <div class="todo-header">
+                <h2>TODO</h2>
+            </div>
+            <div id="todoList" class="todo-list"></div>
+        </div>
+
+        <!-- Status indicator (optional, for debugging) -->
+        <div id="statusIndicator" class="status-indicator hidden">
+            <span id="presenceStatus"></span>
+            <span id="timePeriod"></span>
+        </div>
+    </div>
+
+    <script src="app.js" type="module"></script>
 </body>
 </html>

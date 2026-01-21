@@ -1,0 +1,202 @@
+/* CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* CSS Variables for theming */
+:root {
+    /* Day mode colors */
+    --bg-color-day: #ffffff;
+    --text-color-day: #000000;
+    --overlay-bg-day: rgba(255, 255, 255, 0.95);
+
+    /* Night mode colors */
+    --bg-color-night: #000000;
+    --text-color-night: #ffffff;
+    --overlay-bg-night: rgba(0, 0, 0, 0.95);
+
+    /* Active colors (default to day) */
+    --bg-color: var(--bg-color-day);
+    --text-color: var(--text-color-day);
+    --overlay-bg: var(--overlay-bg-day);
+
+    /* Transition duration */
+    --transition-duration: 1000ms;
+}
+
+/* Night mode theme */
+body.night-mode {
+    --bg-color: var(--bg-color-night);
+    --text-color: var(--text-color-night);
+    --overlay-bg: var(--overlay-bg-night);
+}
+
+/* Base styles */
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color var(--transition-duration) ease,
+                color var(--transition-duration) ease;
+}
+
+/* Fullscreen/Kiosk mode styles */
+.app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Image container */
+.image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-color);
+    transition: opacity var(--transition-duration) ease;
+}
+
+.art-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity var(--transition-duration) ease;
+}
+
+.art-image.visible {
+    opacity: 1;
+}
+
+/* TODO Overlay */
+.todo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 4rem;
+    transition: opacity 0.5s ease,
+                background-color var(--transition-duration) ease;
+    z-index: 100;
+}
+
+.todo-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.todo-header {
+    margin-bottom: 2rem;
+}
+
+.todo-header h2 {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    letter-spacing: 0.05em;
+}
+
+.todo-list {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 2.5rem;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.todo-item {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.todo-item::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+/* Status indicator (for debugging) */
+.status-indicator {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    z-index: 200;
+    display: flex;
+    gap: 1rem;
+}
+
+.status-indicator.hidden {
+    display: none;
+}
+
+/* Screen blanking for away state */
+.app.away {
+    opacity: 0;
+    transition: opacity 2s ease;
+}
+
+.app.away .image-container,
+.app.away .todo-overlay {
+    display: none;
+}
+
+/* Loading state */
+.image-container.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Smooth transitions between images */
+.fade-transition {
+    animation: fadeInOut var(--transition-duration) ease;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Cursor hiding for kiosk mode */
+body {
+    cursor: none;
+}
+
+/* Show cursor on interaction (optional) */
+body:active {
+    cursor: default;
+}
