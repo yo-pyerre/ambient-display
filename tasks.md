@@ -122,11 +122,11 @@
 
 ## Phase 15: Documentation & Polish
 
-- [ ] Document configuration file format
-- [ ] Create deployment guide for Raspberry Pi
-- [ ] Document SSH access and remote management
-- [ ] Add troubleshooting section
-- [ ] Create user guide for TODO file format
+- [x] Document configuration file format
+- [x] Create deployment guide for Raspberry Pi
+- [x] Document SSH access and remote management
+- [x] Add troubleshooting section
+- [x] Create user guide for TODO file format
 
 ## Phase 16: Future Enhancements (Optional)
 

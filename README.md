@@ -46,14 +46,40 @@ The Raspberry Pi Art Display is a full-screen web application that transforms yo
 - Python 3.10+
 - Chromium browser
 
-## Installation
+## Quick Start
 
-1. Clone this repository
-2. Create virtual environment: `uv venv`
-3. Install dependencies: `uv pip install -r requirements.txt`
-4. Configure settings in `config/config.json`
-5. Run the backend: `uv run python backend/app.py`
-6. Open frontend in browser or configure kiosk mode
+### Automated Installation (Recommended)
+
+```bash
+cd /home/pi
+git clone <repository-url> art-display
+cd art-display
+./deployment/setup.sh
+```
+
+This script will:
+- Install system dependencies
+- Set up Python environment
+- Install systemd service
+- Configure autostart
+
+### Manual Installation
+
+See [deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md) for detailed instructions.
+
+### Development Mode
+
+```bash
+# Install dependencies
+uv venv
+uv pip install -r requirements.txt
+
+# Start backend
+uv run python backend/app.py
+
+# Open frontend
+open http://localhost:5000
+```
 
 ## Project Structure
 
@@ -67,21 +93,66 @@ The Raspberry Pi Art Display is a full-screen web application that transforms yo
 └── requirements.txt  # Python dependencies
 ```
 
+## Documentation
+
+- **[User Guide](docs/USER_GUIDE.md)** - Daily usage and content management
+- **[Configuration Guide](docs/CONFIGURATION.md)** - All configuration options explained
+- **[Deployment Guide](deployment/DEPLOYMENT.md)** - Complete setup instructions
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+
 ## Configuration
 
 Settings are managed via `config/config.json`:
 - Image slideshow duration
 - Target device IP for presence detection
 - File paths and directories
-- Time period definitions
+- Time period definitions (day/night)
 - Scan intervals
 
-See `docs/` for detailed configuration options.
+Example:
+```json
+{
+  "image_duration": 30,
+  "device_ip": "192.168.1.100",
+  "paths": {
+    "images": "cover art",
+    "todos": "todos.txt"
+  }
+}
+```
+
+See [Configuration Guide](docs/CONFIGURATION.md) for all options.
+
+## Testing
+
+Run the integration test suite:
+
+```bash
+# Start backend
+uv run python backend/app.py &
+
+# Run tests
+uv run python tests/integration_test.py
+```
+
+## API Endpoints
+
+The backend provides these REST API endpoints:
+
+- `GET /health` - Health check
+- `GET /api/config` - Get configuration
+- `GET /api/images` - List available images
+- `GET /api/images/<filename>` - Serve image file
+- `GET /api/todos` - Get TODO list
+- `GET /api/time-period` - Get current time period (day/night)
+- `GET /api/presence` - Get device presence status
+
+## Development Status
+
+✅ **Complete!** All core features implemented and tested.
+
+See `tasks.md` for detailed implementation progress.
 
 ## License
 
 Personal project - All rights reserved
-
-## Development Status
-
-Currently in active development. See `tasks.md` for implementation progress.
