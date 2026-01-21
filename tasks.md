@@ -50,13 +50,13 @@
 
 ## Phase 7: Backend - Network Presence Detection
 
-- [ ] Research and choose network scanning method (arp-scan vs ping)
-- [ ] Implement device presence checker function
-- [ ] Test presence detection with target device
-- [ ] Create background scheduler for periodic scanning
-- [ ] Implement endpoint to get presence status (GET /api/presence)
-- [ ] Add configurable scan interval to config
-- [ ] Test presence status updates correctly
+- [x] Research and choose network scanning method (arp-scan vs ping)
+- [x] Implement device presence checker function
+- [x] Test presence detection with target device
+- [x] Create background scheduler for periodic scanning
+- [x] Implement endpoint to get presence status (GET /api/presence)
+- [x] Add configurable scan interval to config
+- [x] Test presence status updates correctly
 
 ## Phase 8: Frontend - Basic Structure
 

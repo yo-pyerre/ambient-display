@@ -8,12 +8,23 @@ from config_loader import get_config
 from image_handler import ImageHandler
 from todo_handler import TodoHandler
 from time_service import TimeService
+from presence_detector import PresenceDetector
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
 
 # Configure CORS for local development
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Initialize presence detector
+config = get_config()
+presence_detector = PresenceDetector(
+    device_ip=config.get('device_ip'),
+    scan_interval=config.get('presence.scan_interval'),
+    scan_method=config.get('presence.scan_method')
+)
+# Start monitoring in background
+presence_detector.start_monitoring()
 
 # Health check endpoint
 @app.route('/health', methods=['GET'])
@@ -137,6 +148,19 @@ def get_time_period():
     except Exception as e:
         return jsonify({
             'error': 'Failed to determine time period',
+            'message': str(e)
+        }), 500
+
+# Presence detection endpoints
+@app.route('/api/presence', methods=['GET'])
+def get_presence():
+    """Get device presence status."""
+    try:
+        status = presence_detector.get_status()
+        return jsonify(status), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to get presence status',
             'message': str(e)
         }), 500
 
