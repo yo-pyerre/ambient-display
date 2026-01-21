@@ -10,3 +10,6 @@ scapy==2.5.0
 
 # Utility
 python-dotenv==1.0.0
+
+# Testing
+requests==2.31.0

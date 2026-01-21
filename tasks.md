@@ -104,12 +104,12 @@
 
 ## Phase 13: Integration Testing
 
-- [ ] Test full flow: presence detection → display activation
-- [ ] Test image slideshow runs continuously
-- [ ] Test TODO overlay displays correctly
-- [ ] Test time-based behavior changes
-- [ ] Test configuration changes take effect
-- [ ] Test system recovery from network drops
+- [x] Test full flow: presence detection → display activation
+- [x] Test image slideshow runs continuously
+- [x] Test TODO overlay displays correctly
+- [x] Test time-based behavior changes
+- [x] Test configuration changes take effect
+- [x] Test system recovery from network drops
 
 ## Phase 14: System Deployment
 
