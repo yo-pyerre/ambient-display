@@ -4,9 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
-WorkingDirectory=/home/pi/art-display
-ExecStart=/home/pi/art-display/.venv/bin/python backend/app.py
+User=taiden
+ExecStart=/home/taiden/scripts/start-art-display-service.sh
 Restart=always
 RestartSec=10
 StandardOutput=journal
