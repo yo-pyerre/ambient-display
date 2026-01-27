@@ -6,6 +6,7 @@
 import { CONFIG, state, elements, fetchAPI, updateState } from './app.js';
 
 let slideshowInterval = null;
+let imageRefreshInterval = null;
 let preloadedImage = null;
 
 /**
@@ -29,6 +30,9 @@ export async function initSlideshow() {
     // Start slideshow
     startSlideshow();
 
+    // Start periodic image refresh to detect new images
+    startImageRefresh();
+
     console.log(`Slideshow started with ${state.images.length} images`);
 }
 
@@ -44,6 +48,25 @@ async function loadImages() {
     } else {
         console.error('Failed to load images or no images found');
     }
+}
+
+/**
+ * Start periodic image refresh to detect new images in the folder
+ */
+function startImageRefresh() {
+    // Check for new images every 60 seconds
+    imageRefreshInterval = setInterval(async () => {
+        const data = await fetchAPI('/api/images');
+        if (data && data.images) {
+            const currentCount = state.images.length;
+            const newCount = data.images.length;
+
+            if (newCount !== currentCount) {
+                console.log(`Image count changed: ${currentCount} -> ${newCount}`);
+                updateState({ images: data.images });
+            }
+        }
+    }, 60000);
 }
 
 /**
@@ -152,6 +175,17 @@ export function stopSlideshow() {
         clearInterval(slideshowInterval);
         slideshowInterval = null;
         console.log('Slideshow stopped');
+    }
+}
+
+/**
+ * Stop the image refresh timer
+ */
+export function stopImageRefresh() {
+    if (imageRefreshInterval) {
+        clearInterval(imageRefreshInterval);
+        imageRefreshInterval = null;
+        console.log('Image refresh stopped');
     }
 }
 
