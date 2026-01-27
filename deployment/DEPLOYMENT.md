@@ -34,14 +34,12 @@ sudo apt-get install -y \
 ### 3. Set Up Python Environment
 
 ```bash
-cd /home/pi/art-display
-
-# Install uv (fast Python package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
+cd /home/pi/ambient-display
 
 # Create virtual environment and install dependencies
-uv venv
-uv pip install -r requirements.txt
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ### 4. Configure the Application

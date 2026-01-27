@@ -26,6 +26,14 @@
             <span id="presenceStatus"></span>
             <span id="timePeriod"></span>
         </div>
+
+        <!-- Hidden exit control (click top-right corner to reveal) -->
+        <div id="exitTrigger" class="exit-trigger"></div>
+        <div id="exitPanel" class="exit-panel hidden">
+            <button id="toggleFullscreen" class="exit-btn">Toggle Fullscreen</button>
+            <button id="exitKiosk" class="exit-btn exit-btn-danger">Exit Kiosk</button>
+            <p class="exit-hint">Press Escape to close this panel</p>
+        </div>
     </div>
 
     <script src="app.js" type="module"></script>

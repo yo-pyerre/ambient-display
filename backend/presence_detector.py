@@ -29,29 +29,32 @@ class PresenceDetector:
         self.is_running = False
 
     def ping_device(self) -> bool:
-        """
-        Ping the device to check if it's online.
+        return True
 
-        Returns:
-            True if device responds, False otherwise
-        """
-        # Determine ping parameters based on OS
-        param = '-n' if platform.system().lower() == 'windows' else '-c'
-        # Use -W for timeout on Linux/Mac, -w on Windows
-        timeout_param = '-w' if platform.system().lower() == 'windows' else '-W'
+    # def ping_device(self) -> bool:
+    #     """
+    #     Ping the device to check if it's online.
 
-        try:
-            # Ping with 1 packet and 1 second timeout
-            command = ['ping', param, '1', timeout_param, '1', self.device_ip]
-            result = subprocess.run(
-                command,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=2
-            )
-            return result.returncode == 0
-        except (subprocess.TimeoutExpired, Exception):
-            return False
+    #     Returns:
+    #         True if device responds, False otherwise
+    #     """
+    #     # Determine ping parameters based on OS
+    #     param = '-n' if platform.system().lower() == 'windows' else '-c'
+    #     # Use -W for timeout on Linux/Mac, -w on Windows
+    #     timeout_param = '-w' if platform.system().lower() == 'windows' else '-W'
+
+    #     try:
+    #         # Ping with 1 packet and 1 second timeout
+    #         command = ['ping', param, '1', timeout_param, '1', self.device_ip]
+    #         result = subprocess.run(
+    #             command,
+    #             stdout=subprocess.DEVNULL,
+    #             stderr=subprocess.DEVNULL,
+    #             timeout=2
+    #         )
+    #         return result.returncode == 0
+    #     except (subprocess.TimeoutExpired, Exception):
+    #         return False
 
     def check_presence(self) -> bool:
         """

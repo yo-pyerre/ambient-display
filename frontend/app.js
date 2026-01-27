@@ -66,7 +66,11 @@ async function init() {
     const { initTimeManager } = await import('./timeManager.js');
     initTimeManager();
 
+    const { initKioskControl } = await import('./kioskControl.js');
+    initKioskControl();
+
     console.log('Application initialized successfully');
+    console.log('Keyboard shortcuts: T=TODOs, F11=Fullscreen, Ctrl+Shift+Q=Exit Panel');
 }
 
 /**
