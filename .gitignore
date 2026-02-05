@@ -43,6 +43,7 @@ ideas.txt
 cover art/
 config/*.json
 !config/config.example.json
+artwork/
 
 # Environment Variables
 .env
