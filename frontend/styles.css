@@ -24,6 +24,9 @@
 
     /* Transition duration */
     --transition-duration: 1000ms;
+
+    /* Weather bar height */
+    --weather-bar-height: 40px;
 }
 
 /* Night mode theme */
@@ -56,7 +59,7 @@ html, body {
 /* Image container */
 .image-container {
     width: 100%;
-    height: 100%;
+    height: calc(100% - var(--weather-bar-height));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,8 +68,8 @@ html, body {
 }
 
 .art-image {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     opacity: 0;
     transition: opacity var(--transition-duration) ease;
@@ -279,4 +282,358 @@ body:active {
     font-size: 0.75rem;
     text-align: center;
     margin-top: 0.5rem;
+}
+
+/* ================================================================
+   Weather Bottom Bar — Design C: soft mono
+   ================================================================ */
+.weather-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: var(--weather-bar-height);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    font-family: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", "Monaco", monospace;
+    font-size: 12px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.weather-bar.hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+}
+
+.bar-time {
+    color: rgba(255, 255, 255, 0.85);
+    font-variant-numeric: tabular-nums;
+}
+
+.bar-sep {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.bar-weather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: auto;
+}
+
+.bar-emoji {
+    font-size: 13px;
+}
+
+.bar-temp {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ================================================================
+   Morning Display Overlay — Design C: soft mono
+   ================================================================ */
+.morning-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #111113;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+    z-index: 100;
+}
+
+.morning-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.morning-card {
+    width: 100%;
+    max-width: 620px;
+    padding: 0 28px;
+    font-family: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", "Monaco", monospace;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+}
+
+.morning-overlay:not(.hidden) .morning-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Header: clock + date */
+.morning-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+}
+
+.morning-clock {
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    font-weight: 400;
+    color: #e8e6e3;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.morning-date {
+    font-size: 12px;
+    color: rgba(232, 230, 227, 0.35);
+    text-align: right;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+/* Current conditions */
+.morning-current {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(232, 230, 227, 0.07);
+}
+
+.current-emoji {
+    font-size: 28px;
+}
+
+.current-temp {
+    font-size: 32px;
+    color: #e8e6e3;
+    letter-spacing: -0.03em;
+}
+
+.current-desc {
+    font-size: 14px;
+    color: rgba(232, 230, 227, 0.35);
+    margin-left: auto;
+}
+
+/* Detail grid */
+.morning-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(232, 230, 227, 0.07);
+    margin-bottom: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.detail-cell {
+    background: #111113;
+    padding: 16px;
+    text-align: center;
+}
+
+.detail-label {
+    font-size: 10px;
+    color: rgba(232, 230, 227, 0.18);
+    text-transform: lowercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+
+.detail-value {
+    font-size: 15px;
+    color: #e8e6e3;
+}
+
+/* Forecast row */
+.morning-forecast {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: rgba(232, 230, 227, 0.07);
+    margin-bottom: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.forecast-day {
+    background: #111113;
+    text-align: center;
+    padding: 18px 8px;
+}
+
+.forecast-today {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.forecast-name {
+    font-size: 10px;
+    text-transform: lowercase;
+    letter-spacing: 0.06em;
+    color: rgba(232, 230, 227, 0.18);
+    margin-bottom: 12px;
+}
+
+.forecast-today .forecast-name {
+    color: #e8e6e3;
+}
+
+.forecast-emoji {
+    font-size: 18px;
+    margin-bottom: 12px;
+    line-height: 1;
+}
+
+.forecast-high {
+    font-size: 14px;
+    color: #e8e6e3;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.forecast-low {
+    font-size: 12px;
+    color: rgba(232, 230, 227, 0.18);
+}
+
+/* Celestial row */
+.morning-celestial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.025);
+    border-radius: 8px;
+    border: 1px solid rgba(232, 230, 227, 0.07);
+    font-family: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", "Monaco", monospace;
+}
+
+.celestial-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.cel-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(232, 230, 227, 0.35);
+}
+
+.cel-emoji {
+    font-size: 13px;
+}
+
+.cel-time {
+    color: #e8e6e3;
+}
+
+.cel-dash {
+    color: rgba(232, 230, 227, 0.18);
+}
+
+.moon-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(232, 230, 227, 0.35);
+}
+
+/* ================================================================
+   Responsive
+   ================================================================ */
+@media (max-width: 768px) {
+    .morning-card {
+        padding: 0 16px;
+    }
+
+    .morning-header {
+        margin-bottom: 32px;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .morning-date {
+        text-align: left;
+    }
+
+    .morning-current {
+        gap: 10px;
+    }
+
+    .current-emoji {
+        font-size: 22px;
+    }
+
+    .current-temp {
+        font-size: 26px;
+    }
+
+    .current-desc {
+        font-size: 12px;
+    }
+
+    .morning-details {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .detail-cell {
+        padding: 12px;
+    }
+
+    .detail-value {
+        font-size: 14px;
+    }
+
+    .morning-forecast {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .forecast-day {
+        padding: 14px 4px;
+    }
+
+    .forecast-name {
+        font-size: 9px;
+    }
+
+    .forecast-emoji {
+        font-size: 15px;
+    }
+
+    .forecast-high {
+        font-size: 13px;
+    }
+
+    .forecast-low {
+        font-size: 11px;
+    }
+
+    .morning-celestial {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 14px 16px;
+    }
+
+    .weather-bar {
+        padding: 0 16px;
+        font-size: 11px;
+    }
 }

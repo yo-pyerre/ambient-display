@@ -2,7 +2,7 @@
 Time-of-Day Service Module
 Handles time period detection and management
 """
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from typing import Dict, Literal
 
 TimeperiodType = Literal['day', 'night']
@@ -121,3 +121,37 @@ class TimeService:
             True if night, False if day
         """
         return self.get_current_period(current_time) == 'night'
+
+    def is_morning_hour(self, current_time: datetime = None, duration_minutes: int = 60) -> bool:
+        """
+        Check if current time is within the morning display period.
+
+        The morning period is defined as the first N minutes after day_start.
+
+        Args:
+            current_time: Current datetime (defaults to now)
+            duration_minutes: How long the morning period lasts (default 60)
+
+        Returns:
+            True if within morning period, False otherwise
+        """
+        if current_time is None:
+            current_time = datetime.now()
+
+        # Must be during daytime
+        if not self.is_day(current_time):
+            return False
+
+        current = current_time.time()
+
+        # Calculate end of morning period
+        day_start_dt = datetime.combine(current_time.date(), self.day_start)
+        morning_end_dt = day_start_dt + timedelta(minutes=duration_minutes)
+        morning_end = morning_end_dt.time()
+
+        # Handle case where morning period crosses midnight (unlikely but safe)
+        if morning_end < self.day_start:
+            # Morning period spans midnight
+            return current >= self.day_start or current < morning_end
+        else:
+            return self.day_start <= current < morning_end

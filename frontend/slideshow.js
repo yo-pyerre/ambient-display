@@ -160,8 +160,8 @@ function startSlideshow() {
     }
 
     slideshowInterval = setInterval(() => {
-        // Only advance slideshow if not showing TODOs and not away
-        if (!state.showingTodos && !state.isAway) {
+        // Only advance slideshow if not showing TODOs, not away, and not showing morning display
+        if (!state.showingTodos && !state.isAway && !state.showingMorning) {
             showNextImage();
         }
     }, CONFIG.imageDuration);

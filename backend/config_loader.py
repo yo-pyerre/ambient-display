@@ -25,7 +25,8 @@ DEFAULT_CONFIG = {
     "display": {
         "transition_duration": 1000,
         "poll_interval": 5000
-    }
+    },
+    "temperature_unit": "fahrenheit"
 }
 
 class ConfigLoader:

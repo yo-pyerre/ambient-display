@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Design C — Soft Mono</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bar-bg: rgba(255, 255, 255, 0.08);
+    --bar-text: rgba(255, 255, 255, 0.5);
+    --bar-bright: rgba(255, 255, 255, 0.85);
+    --m-bg: #111113;
+    --m-text: #e8e6e3;
+    --m-muted: rgba(232, 230, 227, 0.35);
+    --m-dim: rgba(232, 230, 227, 0.18);
+    --m-border: rgba(232, 230, 227, 0.07);
+    --m-card: rgba(255, 255, 255, 0.025);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", "Monaco", monospace;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Artwork Background ── */
+  .artwork-bg {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, #1a2332 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, #1c1c28 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 80%, #141418 0%, transparent 50%),
+      linear-gradient(145deg, #0d1117 0%, #161b22 35%, #1a1e26 65%, #0d1117 100%);
+  }
+
+  .artwork-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 25% 50%, rgba(88, 166, 255, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 75% 40%, rgba(139, 148, 158, 0.03) 0%, transparent 35%);
+  }
+
+  /* ── Toggle ── */
+  .view-toggle {
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 500;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.45);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: inherit;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .view-toggle:hover { background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7); }
+  .view-toggle.morning-active {
+    background: rgba(232, 230, 227, 0.06);
+    color: rgba(232, 230, 227, 0.35);
+  }
+
+  /* ── Bottom Bar ── */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 100;
+    height: 40px;
+    background: var(--bar-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 24px;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    font-size: 12px;
+  }
+
+  .bottom-bar.hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+
+  .bar-time {
+    color: var(--bar-bright);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar-sep {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .bar-weather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--bar-text);
+    margin-left: auto;
+  }
+
+  .bar-emoji { font-size: 13px; }
+  .bar-temp { color: var(--bar-bright); }
+
+  /* ── Morning Overlay ── */
+  .morning-overlay {
+    position: fixed; inset: 0;
+    z-index: 200;
+    background: var(--m-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .morning-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .morning-card {
+    width: 100%;
+    max-width: 620px;
+    padding: 0 28px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+  }
+
+  .morning-overlay.visible .morning-card {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Header row */
+  .morning-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+  }
+
+  .morning-clock {
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    font-weight: 400;
+    color: var(--m-text);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .morning-date {
+    font-size: 12px;
+    color: var(--m-muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* Current */
+  .morning-current {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--m-border);
+  }
+
+  .current-emoji { font-size: 28px; }
+
+  .current-temp {
+    font-size: 32px;
+    color: var(--m-text);
+    letter-spacing: -0.03em;
+  }
+
+  .current-desc {
+    font-size: 14px;
+    color: var(--m-muted);
+    margin-left: auto;
+  }
+
+  /* Details grid */
+  .morning-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--m-border);
+    margin-bottom: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .detail-cell {
+    background: var(--m-bg);
+    padding: 16px;
+    text-align: center;
+  }
+
+  .detail-label {
+    font-size: 10px;
+    color: var(--m-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .detail-value {
+    font-size: 15px;
+    color: var(--m-text);
+  }
+
+  /* Forecast */
+  .morning-forecast {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--m-border);
+    margin-bottom: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .forecast-day {
+    background: var(--m-bg);
+    text-align: center;
+    padding: 18px 8px;
+  }
+
+  .forecast-day:first-child {
+    background: var(--m-card);
+  }
+
+  .forecast-name {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--m-dim);
+    margin-bottom: 12px;
+  }
+
+  .forecast-day:first-child .forecast-name {
+    color: var(--m-text);
+  }
+
+  .forecast-emoji {
+    font-size: 18px;
+    margin-bottom: 12px;
+    line-height: 1;
+  }
+
+  .forecast-high {
+    font-size: 14px;
+    color: var(--m-text);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .forecast-low {
+    font-size: 12px;
+    color: var(--m-dim);
+  }
+
+  /* Celestial */
+  .morning-celestial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--m-card);
+    border-radius: 8px;
+    border: 1px solid var(--m-border);
+  }
+
+  .celestial-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .cel-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--m-muted);
+  }
+
+  .cel-emoji { font-size: 13px; }
+  .cel-time { color: var(--m-text); }
+  .cel-dash { color: var(--m-dim); }
+
+  .moon-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--m-muted);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .morning-card { padding: 0 16px; }
+    .morning-header { margin-bottom: 32px; flex-direction: column; gap: 4px; }
+    .morning-date { text-align: left; }
+
+    .morning-current { gap: 10px; }
+    .current-emoji { font-size: 22px; }
+    .current-temp { font-size: 26px; }
+    .current-desc { font-size: 12px; }
+
+    .morning-details { grid-template-columns: repeat(2, 1fr); }
+    .detail-cell { padding: 12px; }
+    .detail-value { font-size: 14px; }
+
+    .morning-forecast { grid-template-columns: repeat(5, 1fr); }
+    .forecast-day { padding: 14px 4px; }
+    .forecast-name { font-size: 9px; }
+    .forecast-emoji { font-size: 15px; }
+    .forecast-high { font-size: 13px; }
+    .forecast-low { font-size: 11px; }
+
+    .morning-celestial {
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 14px 16px;
+    }
+
+    .bottom-bar { padding: 0 16px; font-size: 11px; }
+  }
+
+  /* Label */
+  .design-label {
+    position: fixed;
+    bottom: 52px; left: 24px;
+    z-index: 90;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.15);
+    transition: opacity 0.4s ease;
+  }
+  .design-label.hidden { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="artwork-bg"></div>
+<div class="design-label" id="designLabel">design-c // soft-mono</div>
+
+<button class="view-toggle" id="viewToggle" onclick="toggleView()">morning</button>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar" id="bottomBar">
+  <span class="bar-time" id="barTime">07:45</span>
+  <div class="bar-sep"></div>
+  <div class="bar-weather">
+    <span class="bar-emoji">⛅</span>
+    <span class="bar-temp">72°F</span>
+    <span>partly cloudy</span>
+  </div>
+</div>
+
+<!-- Morning Overlay -->
+<div class="morning-overlay" id="morningOverlay">
+  <div class="morning-card">
+
+    <div class="morning-header">
+      <div class="morning-clock" id="morningClock">07:45</div>
+      <div class="morning-date">thu feb 06<br>2026</div>
+    </div>
+
+    <div class="morning-current">
+      <span class="current-emoji">⛅</span>
+      <span class="current-temp">72°F</span>
+      <span class="current-desc">partly cloudy</span>
+    </div>
+
+    <div class="morning-details">
+      <div class="detail-cell">
+        <div class="detail-label">feels like</div>
+        <div class="detail-value">68°F</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">humidity</div>
+        <div class="detail-value">45%</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">wind</div>
+        <div class="detail-value">8 mph</div>
+      </div>
+      <div class="detail-cell">
+        <div class="detail-label">uv index</div>
+        <div class="detail-value">3</div>
+      </div>
+    </div>
+
+    <div class="morning-forecast">
+      <div class="forecast-day">
+        <div class="forecast-name">today</div>
+        <div class="forecast-emoji">⛅</div>
+        <span class="forecast-high">75°</span>
+        <span class="forecast-low">58°</span>
+      </div>
+      <div class="forecast-day">
+        <div class="forecast-name">fri</div>
+        <div class="forecast-emoji">☀️</div>
+        <span class="forecast-high">78°</span>
+        <span class="forecast-low">60°</span>
+      </div>
+      <div class="forecast-day">
+        <div class="forecast-name">sat</div>
+        <div class="forecast-emoji">🌤️</div>
+        <span class="forecast-high">74°</span>
+        <span class="forecast-low">57°</span>
+      </div>
+      <div class="forecast-day">
+        <div class="forecast-name">sun</div>
+        <div class="forecast-emoji">🌧️</div>
+        <span class="forecast-high">65°</span>
+        <span class="forecast-low">52°</span>
+      </div>
+      <div class="forecast-day">
+        <div class="forecast-name">mon</div>
+        <div class="forecast-emoji">☀️</div>
+        <span class="forecast-high">71°</span>
+        <span class="forecast-low">55°</span>
+      </div>
+    </div>
+
+    <div class="morning-celestial">
+      <div class="celestial-left">
+        <div class="cel-item">
+          <span class="cel-emoji">🌅</span>
+          <span class="cel-time">6:42</span>
+        </div>
+        <span class="cel-dash">→</span>
+        <div class="cel-item">
+          <span class="cel-emoji">🌇</span>
+          <span class="cel-time">17:38</span>
+        </div>
+      </div>
+      <div class="moon-item">
+        <span>🌒</span>
+        <span>waxing crescent</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let isMorning = false;
+
+  function toggleView() {
+    isMorning = !isMorning;
+    const overlay = document.getElementById('morningOverlay');
+    const bar = document.getElementById('bottomBar');
+    const btn = document.getElementById('viewToggle');
+    const label = document.getElementById('designLabel');
+
+    if (isMorning) {
+      overlay.classList.add('visible');
+      bar.classList.add('hidden');
+      btn.textContent = 'slideshow';
+      btn.classList.add('morning-active');
+      label.classList.add('hidden');
+    } else {
+      overlay.classList.remove('visible');
+      bar.classList.remove('hidden');
+      btn.textContent = 'morning';
+      btn.classList.remove('morning-active');
+      label.classList.remove('hidden');
+    }
+  }
+
+  function updateBarTime() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('barTime').textContent = h + ':' + m;
+  }
+
+  function updateMorningClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('morningClock').textContent = h + ':' + m;
+  }
+
+  updateBarTime();
+  updateMorningClock();
+  setInterval(updateBarTime, 1000);
+  setInterval(updateMorningClock, 1000);
+</script>
+</body>
+</html>

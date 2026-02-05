@@ -13,6 +13,74 @@
             <img id="currentImage" class="art-image" alt="Artwork">
         </div>
 
+        <!-- Morning display overlay -->
+        <div id="morningOverlay" class="morning-overlay hidden">
+            <div class="morning-card">
+
+                <div class="morning-header">
+                    <div id="morningTime" class="morning-clock">00:00</div>
+                    <div id="morningDate" class="morning-date"></div>
+                </div>
+
+                <div class="morning-current" id="morningCurrent">
+                    <span id="morningEmoji" class="current-emoji"></span>
+                    <span id="morningTemp" class="current-temp">--</span>
+                    <span id="morningDesc" class="current-desc">loading...</span>
+                </div>
+
+                <div class="morning-details" id="morningDetails">
+                    <div class="detail-cell">
+                        <div class="detail-label">feels like</div>
+                        <div class="detail-value" id="morningFeelsLike">--</div>
+                    </div>
+                    <div class="detail-cell">
+                        <div class="detail-label">humidity</div>
+                        <div class="detail-value" id="morningHumidity">--</div>
+                    </div>
+                    <div class="detail-cell">
+                        <div class="detail-label">wind</div>
+                        <div class="detail-value" id="morningWind">--</div>
+                    </div>
+                    <div class="detail-cell">
+                        <div class="detail-label">uv index</div>
+                        <div class="detail-value" id="morningUV">--</div>
+                    </div>
+                </div>
+
+                <div class="morning-forecast" id="morningForecast"></div>
+
+                <div class="morning-celestial" id="morningCelestial">
+                    <div class="celestial-left">
+                        <div class="cel-item">
+                            <span class="cel-emoji">🌅</span>
+                            <span class="cel-time" id="morningRise">--</span>
+                        </div>
+                        <span class="cel-dash">→</span>
+                        <div class="cel-item">
+                            <span class="cel-emoji">🌇</span>
+                            <span class="cel-time" id="morningSet">--</span>
+                        </div>
+                    </div>
+                    <div class="moon-item">
+                        <span id="morningMoonEmoji">🌑</span>
+                        <span id="morningMoonName">--</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Weather bottom bar -->
+        <div id="weatherBar" class="weather-bar">
+            <span id="barTime" class="bar-time">00:00</span>
+            <div class="bar-sep"></div>
+            <div class="bar-weather">
+                <span id="barEmoji" class="bar-emoji"></span>
+                <span id="barTemp" class="bar-temp">--</span>
+                <span id="barDesc"></span>
+            </div>
+        </div>
+
         <!-- TODO overlay -->
         <div id="todoOverlay" class="todo-overlay hidden">
             <div class="todo-header">

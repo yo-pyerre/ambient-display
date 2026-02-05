@@ -4,8 +4,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=taiden
-ExecStart=/home/taiden/scripts/start-art-display-service.sh
+User=pi
+WorkingDirectory=/home/pi/art-display
+ExecStart=/home/pi/art-display/deployment/start-service.sh
 Restart=always
 RestartSec=10
 StandardOutput=journal

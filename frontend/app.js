@@ -19,7 +19,8 @@ const state = {
     presence: null,
     timePeriod: 'day',
     isAway: false,
-    showingTodos: false
+    showingTodos: false,
+    showingMorning: false
 };
 
 // DOM elements
@@ -69,7 +70,17 @@ async function init() {
     const { initKioskControl } = await import('./kioskControl.js');
     initKioskControl();
 
-    console.log('Application initialized successfully');
+    // Weather service must init before bar and morning display
+    const { initWeatherService } = await import('./weatherService.js');
+    initWeatherService();
+
+    const { initWeatherBar } = await import('./weatherBar.js');
+    initWeatherBar();
+
+    const { initMorningDisplay } = await import('./morningDisplay.js');
+    initMorningDisplay();
+
+    console.log('Application initialized');
     console.log('Keyboard shortcuts: T=TODOs, F11=Fullscreen, Ctrl+Shift+Q=Exit Panel');
 }
 

@@ -9,6 +9,7 @@ from image_handler import ImageHandler
 from todo_handler import TodoHandler
 from time_service import TimeService
 from presence_detector import PresenceDetector
+from weather_service import WeatherService
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='../frontend')
@@ -26,10 +27,25 @@ presence_detector = PresenceDetector(
 # Start monitoring in background
 presence_detector.start_monitoring()
 
+# Initialize weather service singleton
+_weather_service = None
+
+def _get_weather_service():
+    global _weather_service
+    config = get_config()
+    latitude = config.get('location.latitude')
+    longitude = config.get('location.longitude')
+    if latitude is None or longitude is None:
+        return None
+    temperature_unit = config.get('temperature_unit') or 'fahrenheit'
+    if _weather_service is None or _weather_service.latitude != latitude or _weather_service.longitude != longitude or _weather_service.temperature_unit != temperature_unit:
+        _weather_service = WeatherService(latitude, longitude, temperature_unit)
+    return _weather_service
+
 # Health check endpoint
 @app.route('/health', methods=['GET'])
 def health_check():
-    """Health check endpoint to verify server is running."""
+    """Health check to verify server is running."""
     return jsonify({
         'status': 'healthy',
         'service': 'raspberry-pi-art-display'
@@ -45,8 +61,10 @@ def get_configuration():
 @app.route('/api/config/reload', methods=['POST'])
 def reload_configuration():
     """Reload configuration from file."""
+    global _weather_service
     config = get_config()
     config.reload()
+    _weather_service = None
     return jsonify({
         'status': 'reloaded',
         'config': config.get()
@@ -151,6 +169,60 @@ def get_time_period():
             'message': str(e)
         }), 500
 
+# Weather endpoint
+@app.route('/api/weather', methods=['GET'])
+def get_weather():
+    """Get full weather data: current conditions, forecast, moon phase."""
+    ws = _get_weather_service()
+    if ws is None:
+        return jsonify({
+            'error': 'Location not configured',
+            'message': 'Please set location.latitude and location.longitude in config'
+        }), 400
+
+    try:
+        weather = ws.get_weather()
+        return jsonify(weather), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to fetch weather',
+            'message': str(e)
+        }), 500
+
+# Morning info endpoint
+@app.route('/api/morning-info', methods=['GET'])
+def get_morning_info():
+    """Get combined morning display information."""
+    config = get_config()
+    day_start = config.get('time_periods.day_start')
+    night_start = config.get('time_periods.night_start')
+    duration_minutes = config.get('morning_display.duration_minutes')
+    morning_enabled = config.get('morning_display.enabled')
+
+    try:
+        from datetime import datetime
+        service = TimeService(day_start, night_start)
+        is_morning = morning_enabled and service.is_morning_hour(duration_minutes=duration_minutes)
+
+        result = {
+            'is_morning_hour': is_morning,
+            'current_time': datetime.now().strftime('%H:%M'),
+            'morning_enabled': morning_enabled
+        }
+
+        # Include weather if it's morning time
+        if is_morning:
+            ws = _get_weather_service()
+            if ws is not None:
+                result['weather'] = ws.get_weather()
+
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({
+            'error': 'Failed to get morning info',
+            'message': str(e)
+        }), 500
+
 # Presence detection endpoints
 @app.route('/api/presence', methods=['GET'])
 def get_presence():
@@ -177,4 +249,5 @@ def serve_frontend(path):
 
 if __name__ == '__main__':
     # Run the development server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # use_reloader with extra_files helps detect changes on WSL
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True)
