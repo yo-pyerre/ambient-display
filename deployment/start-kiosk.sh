@@ -20,7 +20,7 @@ xset s noblank
 unclutter -idle 1 &
 
 # Start Chromium in kiosk mode
-chromium-browser \
+chromium \
     --noerrdialogs \
     --disable-infobars \
     --kiosk \
