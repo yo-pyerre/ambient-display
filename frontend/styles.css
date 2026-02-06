@@ -8,7 +8,7 @@
 /* CSS Variables for theming */
 :root {
     /* Day mode colors */
-    --bg-color-day: #ffffff;
+    --bg-color-day: #000000;
     --text-color-day: #000000;
     --overlay-bg-day: rgba(255, 255, 255, 0.95);
 
@@ -34,6 +34,15 @@ body.night-mode {
     --bg-color: var(--bg-color-night);
     --text-color: var(--text-color-night);
     --overlay-bg: var(--overlay-bg-night);
+}
+
+/* Hide all content during night mode */
+body.night-mode .image-container,
+body.night-mode .weather-bar,
+body.night-mode .morning-overlay,
+body.night-mode .todo-overlay {
+    opacity: 0;
+    pointer-events: none;
 }
 
 /* Base styles */
