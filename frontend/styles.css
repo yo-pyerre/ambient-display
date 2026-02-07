@@ -7,6 +7,18 @@
 
 /* CSS Variables for theming */
 :root {
+    /* Design System Tokens - "soft mono" aesthetic */
+    --ds-bg-primary: #111113;
+    --ds-text-primary: #e8e6e3;
+    --ds-text-secondary: rgba(232, 230, 227, 0.35);
+    --ds-text-tertiary: rgba(232, 230, 227, 0.18);
+    --ds-border: rgba(232, 230, 227, 0.07);
+    --ds-highlight: rgba(255, 255, 255, 0.025);
+    --ds-font-mono: "SF Mono", "Cascadia Code", "Fira Code", "Consolas", "Monaco", monospace;
+    --ds-radius: clamp(6px, 0.8vw, 16px);
+    --ds-blur: blur(24px);
+    --ds-transition: 0.4s ease;
+
     /* Day mode colors */
     --bg-color-day: #000000;
     --text-color-day: #000000;
@@ -342,7 +354,10 @@ body:active {
 }
 
 .bar-emoji {
-    font-size: clamp(13px, 5vw, 80px);
+    font-size: clamp(12px, 4vw, 64px);
+    line-height: 1;
+    display: flex;
+    align-items: center;
 }
 
 .bar-temp {

@@ -53,6 +53,17 @@ There is no build step — the frontend is plain HTML/JS/CSS served directly by 
 - CSS variable theming: day/night mode switched by toggling a class, all colors defined as CSS variables.
 - Config is a singleton with `get_config()`, supports reload via `POST /api/config/reload`.
 
+## Design System
+
+The frontend follows a cohesive **"soft mono"** aesthetic with:
+- Dark monochromatic color palette (`#111113` background, `#e8e6e3` text)
+- Monospace font stack (SF Mono, Cascadia Code, Fira Code, etc.)
+- Fluid responsive sizing using `clamp()` throughout
+- Grid-based layouts with 1px gaps and rounded corners
+- Subtle backdrop blur effects and gentle animations
+
+**IMPORTANT**: When creating new UI components, follow the established patterns in `docs/DESIGN_SYSTEM.md` to maintain visual consistency. Reference existing components (morning display in `frontend/styles.css:352-641`, weather bar in `frontend/styles.css:296-350`) for color values, typography, and layout patterns.
+
 ## API Endpoints
 
 | Endpoint | Purpose |
